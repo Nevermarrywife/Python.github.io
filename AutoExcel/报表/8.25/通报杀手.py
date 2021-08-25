@@ -197,7 +197,7 @@ for i in data_kd:
         iptv.append(i[17])
 
 for i in data_2816:
-    if i['work'] != None and i['work'] != '2020年“和卫士”（电子学生证）全省统一营销活动_学生参加(GK 309)':
+    if i['work'] != None and i['work'] != '2021年“和卫士”（电子学生证）全省统一营销活动-学生参加(S341、T381、E001、PD88-V)':
         yingjian.append(i['period'])
         yingjian.append(i['county'])
         yingjian.append(i['channelname'])
