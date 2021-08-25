@@ -174,21 +174,24 @@ for i in data_2886:
     #         if i[0] == '永济分公司':
     #             netv_yj.append(i[1])
     #             netv_yj.append(i[3])
-
     "筛选特殊活动"
-    if i[0] == '永济分公司' and i[10] == '2021年流量体验官活动|设为流量主卡体验移动网络，连续6个月赠送5GB流量':
+
+    if i[0] == '永济分公司':
+        if i[10] == '2021年流量体验官活动|设为流量主卡体验移动网络，连续6个月赠送5GB流量':
             active1.append(i[1])
             active1.append(i[3])
-    if i[0] == '永济分公司' and i[10] == '点亮5G活动（实体）|点亮5G活动':
+    if i[0] == '永济分公司':
+        if i[10] == '点亮5G活动（实体）|点亮5G活动':
             active2.append(i[1])
             active2.append(i[3])
 
+
 for i in data_kd:
-    if (i[4] == '家庭宽带' or i[4] == '家庭宽带+IPTV') and i[2] == '装':
+    if i[4] == '家庭宽带' or i[4] == '家庭宽带+IPTV':
         kuandai.append(i[10])
         kuandai.append(i[17])
         kuandai.append(i[16])
-    if (i[4] == '基于宽带的IPTV加装' or i[4] == '家庭宽带+IPTV') and i[2] == '装':
+    if i[4] == '基于宽带的IPTV加装' or i[4] == '家庭宽带+IPTV':
         iptv.append(i[10])
         iptv.append(i[16])
         iptv.append(i[17])
