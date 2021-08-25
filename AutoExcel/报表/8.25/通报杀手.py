@@ -159,6 +159,16 @@ active_v = ('JT2130-运城二季度和飞信新增活动（3个月）',
             'JT2137-运城集团V网新增活动（临猗）','JT2121-运城二季度和飞信新增活动（6个月）|新增10元和飞信享7折优惠，合约6个月',
             'JT2130-运城二季度和飞信新增活动（3个月）|新增10元和飞信享7折优惠，合约3个月')
 
+active_2816 = {'预存减免大礼包',
+               '2021年智家新人礼活动',
+               'ZD2120-运城三季度新装宽带WiFi活动',
+               'SC21106-运城农村宽带客户体验家庭安防营销活动（12个月）',
+               'SC21107-运城农村宽带客户体验家庭安防营销活动（12个月）增补',
+               '2021年智家WiFi尊享礼活动',
+               'SC21105-运城农村宽带客户体验家庭安防营销活动（24个月）',
+               'SC21108-运城农村宽带客户体验家庭安防营销活动（24个月）增补',
+               '2021年三季度“平安乡村社区”营销活动（12个月合约）'}
+
 for i in data_2886:
     if i[4] == '1000' or i[4] == '1379' or i[4] == '4696':
         fanghao.append(i[0])
@@ -197,13 +207,11 @@ for i in data_kd:
         iptv.append(i[17])
 
 for i in data_2816:
-    if i['work'].find('学生证'):
-        yingjian.append(i['work'])
-
-    if i['work'] != None and i['work'] != '2021年“和卫士”（电子学生证）全省统一营销活动-学生参加(S341、T381、E001、PD88-V)':
-        yingjian.append(i['period'])
-        yingjian.append(i['county'])
-        yingjian.append(i['channelname'])
+    for m in active_2816:
+        if i['work'] == m:
+            yingjian.append(i['period'])
+            yingjian.append(i['county'])
+            yingjian.append(i['channelname'])
 
 for n in yingjian:
     for m in periods:
