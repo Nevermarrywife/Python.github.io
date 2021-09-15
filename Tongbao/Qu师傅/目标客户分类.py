@@ -2,6 +2,7 @@
 import os               # 操作Windows文件用
 import xlrd
 import xlwt
+import re
 import pandas as pd
 ## 数据库
 
@@ -31,18 +32,20 @@ def input_data():            #选择分类文件
     return new_file,sheet_name
          
 def export_data():         #对文件进行分类并导出
-    new_file,sheet_name = input_data()
+   # new_file,sheet_name = input_data()
+    new_file = filedialog.askopenfilename()
     dire = os.path.split(new_file)[0] #获取文件目录
-    for j in sheet_name:
-        data = pd.read_excel(new_file,sheet_name=str(j))
-        area_list =list(set(data['区县代码']))
-        for i in area_list:
-            writer = pd.ExcelWriter(dire+"/"+str(i)+"-"+str(j)+".xlsx")
-            df = data[data['区县代码'] == i]
-            label1 = tkinter.Label(top,text='执行进度：'+str(i)+'-'+str(j),width=30).grid(row =3,column = 1,sticky='NW')
-            df.to_excel(writer,sheet_name=str(i),index=False)
-            writer.save()
-            writer.close()
+    fg_file  = os.path.split(new_file)[1]
+    fg_name=re.findall(r'(.+?)\.',fg_file)
+    data = pd.read_excel(new_file)
+    area_list =list(set(data['区县代码']))
+    for i in area_list:
+        writer = pd.ExcelWriter(dire+"/"+str(i)+'-'+fg_name[0]+".xlsx")
+        df = data[data['区县代码'] == i]
+        label1 = tkinter.Label(top,text='执行进度：'+str(i),width=30).grid(row =3,column = 1,sticky='NW')
+        df.to_excel(writer,sheet_name=fg_name[0],index=False)
+        writer.save()
+        writer.close()
 button2 = tkinter.Button(top, text=('  '+'开始分类'+'  '), command=export_data).grid(row=2, column=1)
 label2 = tkinter.Label(top,text='使用说明：区县代码列的标题名称必须修改为“区县代码”；生成文件与分类文件在同一目录',width=100).grid(row =4,column = 1,sticky='NW')
 top.mainloop()

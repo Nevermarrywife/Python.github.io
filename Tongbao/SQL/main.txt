@@ -1,0 +1,186 @@
+数据操作语言（DML），对数据操作：
+#选取数据
+SELECT 列名称1,列名称2 FROM 表名
+SELECT * FROM 表名
+#结果剔重，只针对一列管用
+SELECT DISTINCT 列名称 FROM 表名
+
+#筛选数据
+#使用单引号环绕文本值
+SELECT 列名称 FROM 表名 WHERE 条件（列，运算符（=、<>、>、<、BETWEEN、LIKE），值等）
+#IN操作符，允许在WHERE中规定多个值。选择列名称中值为VALUE1,VALUE2，，，，的数据
+SELECT 列名称 FROM 表名 WHERE 列名 IN (VALUE1,VALUE2,,,,)
+#BETWEEN操作符，筛选介于VALUE1和VALUE2之间的数据，可以是日期，数值，文本。NOT BETWEEN 同理
+SELECT 列名称 FROM 表名 WHERE 列名称 BETWEEN VALUE1 AND VALUE2
+
+#IS NULL和IS NOT NULL值
+添加在WHERE后面，用来筛选NULL值
+#IFNULL(),COALESCE()函数。当列里有值为NULL时，替换为值
+IFNULL(列名,值)
+
+#Alias，别名。用AS创建别名，筛选出名字为mao并且性别为男的数据的ID
+SELECT p.Id FROM 表1 AS p WHERE p.LastName=‘mao’ AND Po.male = ‘男’
+
+#LIKE操作符,表示只筛选列名称里面以N开头的数据这一行，%为通配符，代替缺少的字母。NOT LIKE同理，相反作用
+SELECT 列名称 FROM 表名 WHERE 列名称 LIKE 'N%'
+#通配符，必须与LIKE一起使用
+% 代表0或多个字符；_代表一个字符；[charlist]代表字符列中任何单一字符；[!charlist]代表不在字符列中的任何单一字符；
+#筛选列名称里所有以N、B、D字符开头的数据  (不出结果)
+SELECT * FROM 表名 WHERE 列名称 LIKE ‘[NBD]%’
+
+#INNER JOIN关键字，根据两个或多个表的关系，从表中提取数据.提取列1、列2数据，前提是两个表的ID列一致。
+SELECT 表1.列1，表2.列2 FROM 表1 INNER JOIN 表2 ON 表1.ID = 表2.ID
+#LEFT JOIN关键字，从表1返回所有行的数据，即使在表2中没有匹配到
+SELECT 表1.列1，表2.列2 FROM 表1 LEFT JOIN 表2 ON 表1.ID = 表2.ID
+#RIGHT JOIN关键字，从表2返回所有行的数据，即使在表1中没有匹配到(sqllite 不支持)
+SELECT 表1.列1，表2.列2 FROM 表1 RIGHT JOIN 表2 ON 表1.ID = 表2.ID
+#FULL JOIN关键字，从所有表返回所有存在匹配的行的数据(sqllite 不支持)
+SELECT 表1.列1，表2.列2 FROM 表1 FULL JOIN 表2 ON 表1.ID = 表2.ID
+
+#UNION操作符，合并多个SELECT语句，并返回所有行数据，默认剔除掉重复值。UNION ALL 不剔除重复值
+SELECT 列1 FROM 表1
+UNION
+SELECT 列2 FROM 表2
+
+#AND和OR
+SELECT 列名称 FROM 表名 WHERE （条件1 OR 条件2）AND 条件3
+
+#结果集排序
+#按照字母顺序或升序排列列名称1和列名称2（放语句最后面）
+SELECT 列名称1,列名称2 FROM 表名 ORDER BY 列名称1,列名称2
+#按照字母逆顺序或降序排列列名称1
+SELECT 列名称1,列名称2 FROM 表名 ORDER BY 列名称1 DESC
+
+#只返回前两条数据(sqllite 不支持)
+SELECT TOP 2 * FROM 表名
+#只返回前50%的数据
+SELECT TOP 50 PERCENT * FROM 表名
+
+#SELECT INTO语句,从一个表里选择数据，然后插入另一个表里，一般用作备份
+SELECT */列名 INTO 表名[IN 外部数据库名] FROM 表名
+
+#更新,修改表中数据
+UPDATE 表名称 SET 列名称 = 新值 WHERE 列名称 = 某值
+#删除行数据
+DELETE FROM 表名称 WHERE 列名称 = 某值
+#删除所有行
+DELETE * FROM 表名称
+#插入数据
+INSERT INTO 表名 VALUES (值1,值2....)
+#指定列名称
+INSERT INTO 表名(列1,列2...) VALUES (值1,值2...)
+
+
+数据定义语言（DDL），对表操作：
+#创建数据库
+CREATE DATABASE 数据库名
+#修改数据库
+ALTER DATABASE
+#创建新表
+CREATE TABLE 表名称
+(列名1 数据类型,
+ 列名2 数据类型,
+ 列名3 数据类型,
+ .....
+ )
+#数据类型
+整数，size为最大位数：interger(size) int(size) smallint(size) tinyint(size)
+浮点，size为最大位数，d为小数最大位数：decimal(size,d) numeric(size,d)
+固定长度字符串，size为字符串长度：char(size)
+可变长度字符串，size为字符串最大长度：varchar(size)
+日期：date(yyyymmdd)
+
+#AUTO INCREMENT字段，表里插入新数据时会生成唯一一个数字，默认从1开始，递增1
+CREATE TABLE 表名称
+(列名1 int NOT NULL AUTO_INCREMENT,
+ 列名2 数据类型,
+ ...
+ PRIMARY KEY (列名1)
+ )
+
+#NOT NULL约束，列名1不接受NULL值
+CREATE TABLE 表名称
+(列名1 数据类型 NOT NULL,
+ 列名2 数据类型,
+ ....
+ )
+#UNIQUE 约束，为列提供唯一标识，每个表可有多个约束（无法对已创建的表加约束）
+创建表时：
+CREATE TABLE 表名称
+({SQL Server}列名1 数据类型 NOT NULL UNIQUE,
+ 列名2 数据类型,
+ {MySQL}UNIQUE(列名2)
+ ....
+ )
+表已创建时：
+ALTER TABLE 表名 ADD UNIQUE(列名)
+或
+ALTER TABLE 表名 ADD CONSTRAINT 约束名 UNIQUE (列1，列2)
+撤销UNIQUE约束：
+{MySQL}DROP INDEX 约束名
+{SQL Server}DROP CONSTRAINT 约束名
+#PRIMARY KEY约束
+用法同UNIQUE相同，不过每个表只能有一个PRIMARY KEY,并且主键列不能为NULL
+#FOREIGN KEY约束，此为一个表中的FOREIGN KEY 指向另一个表中的PRIMARY KEY
+创建表时：
+CREATE TABLE 表1
+({SQL Server}列名1 数据类型 FOREIGN KEY REFERENCES 表2(列1) ,
+ 列名2 数据类型,
+ {MySQL}FOREIGN KEY (列3) REFERENCES 表2(列1)
+ ....
+ )
+表已创建时：
+ALTER TABLE 表1 ADD FOREIGN KEY (列1) REFERENCES 表2(列1)
+命名FOREIGN KEY约束：
+ALTER TABLE 表名 ADD CONSTRAINT 约束名 FOREIGN KEY (列1) REFERENCES 表2(列1)
+#CHECK约束，限制列中的值的范围
+创建时：
+CREATE TABLE 表名
+(列名1 数据类型,
+ 列名2 数据类型,
+ 列名3 数据类型,
+ ....
+ {单个约束}CHECK (列名1>10)
+ {多个约束并且命名}CONSTRAINT 约束名1 CHECK (列1>10 AND 列2<20)
+ )
+已创建：
+ALTER TABLE 表1
+{单个约束}ADD CHECK (列1>10)
+{多个约束并且命名}ADD CONSTRAINT 约束名1 CHECK (列1>10 AND 列2<20)
+撤销约束：
+ALTER TABLE 表1
+DROP CHECK 约束名
+#DEFAULT约束，用于向列中插入默认值
+创建时：
+CREATE TABLE 表名
+(列名1 数据类型,
+ 列名2 数据类型,
+ 列名3 数据类型 DEFAULT ‘值1’,
+ ....
+ )
+
+
+#变更数据库表，添加、修改、删除列
+添加列：
+ALTER TABLE 表名 ADD 列名 数据类型
+删除列：
+ALTER TABLE 表名 DROP COLUMN 列名
+改变数据类型：
+ALTER TABLE 表名 ALTER COLUMN 列名 数据类型
+
+#删除表
+DROP TABLE
+#创建索引，搜索键
+CREATE INDEX 索引名 ON 表名 (列名)
+或创建唯一索引
+CREATE UNIQUE INDEX 索引名 ON 表名 (列名)
+#删除索引、表、数据库
+ALTER TABLE 表名 DROP INDEX 索引名
+DROP TABLE 表名
+DROP DATABASE 数据库名
+TRUNCATE TABLE 表名{仅删除数据}
+
+#函数
+SELECT FUNCTION(列名) FROM 表
+#GROUP BY。返回结果时将列1里的结果进行合计。
+SELECT 列1，函数(列2) FROM 表名 GROUP 列1
